@@ -318,14 +318,14 @@
 						pathSegments = path.split('/');
 
 					document.cookie = base;
-					console.log(base);
+					if (name == 'cookiesallowed') console.log(base);
 
 					while (pathSegments.length > 0) {
 						document.cookie = baseHosts + pathSegments.join('/') + '/';
 						document.cookie = baseHosts + pathSegments.join('/');
 
-						console.log(baseHosts + pathSegments.join('/') + '/');
-						console.log(baseHosts + pathSegments.join('/'));
+						if (name == 'cookiesallowed') console.log(baseHosts + pathSegments.join('/') + '/');
+						if (name == 'cookiesallowed') console.log(baseHosts + pathSegments.join('/'));
 						pathSegments.pop();
 					}
 
