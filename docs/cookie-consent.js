@@ -306,8 +306,10 @@
 			console.log(cookies);
 
 			for (var i = 0; i < cookies.length; i++) {
-				var hostSegments = window.location.hostname.split('.');
-				while (hostSegments.length > 0) {
+				var hostSegments = window.location.hostname.split('.'),
+					minLength    = hostSegments.length == 1 ? 1 : 2;
+					
+				while (hostSegments.length >= minLength) {
 					var cookie       = cookies[i].trim(),
 						name         = cookie.split(';')[0].split('=')[0],
 						base         = encodeURIComponent(name) + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT',
