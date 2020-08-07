@@ -30,6 +30,7 @@
 		html, body { width: 100%; height: 100%; background: #F0F0F0; font: 16px/20px Helvetica, Arial, sans-serif; }
 		.cookie-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #FFF; padding: 1em 2em; display: flex; justify-content: space-between; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
 		.cookie-bar.show { opacity: 1; pointer-events: all; }
+		nav { position: absolute; top: 1em; right: 1em; }
 	</style>
 
 
@@ -44,11 +45,13 @@
 		</main>
 		
 		<section class="cookie-bar">
-			<p>Do you like some cookies?</p>
+			<p>Do you like a 🍪?</p>
 			<div class="actions">
 				<button type="button" class="accept">Yes, I do</button>
 				<button type="button" class="deny">Nah</button>
 			</div>
 		</section>
+
+		<nav><a href="https://github.com/thisancog/cookie-consent.js">Code on GitHub</a></nav>
 	</body>
 </html>
