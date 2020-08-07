@@ -296,12 +296,15 @@
 
 		/* remove the cookie storing the consent decision */
 		removeCookieConsentCookie() {
+			console.log('Remove consent cookie');
 			document.cookie = this.params.cookiesAllowedCookie + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
 		}
 
 		/* remove all cookies for this host */
 		removeAllCookies() {
 			var cookies      = document.cookie.split(';');
+
+			console.log(cookies);
 
 			for (var i = 0; i < cookies.length; i++) {
 				var hostSegments = window.location.hostname.split('.');
@@ -313,10 +316,14 @@
 						pathSegments = window.location.pathname.split('/');
 
 					document.cookie = base;
+					console.log(base);
 
 					while (pathSegments.length > 0) {
 						document.cookie = baseHosts + pathSegments.join('/');
 						document.cookie = baseHosts + pathSegments.join('/') + '/';
+
+						console.log(baseHosts + pathSegments.join('/'));
+						console.log(baseHosts + pathSegments.join('/')) + '/';
 						pathSegments.pop();
 					}
 
@@ -324,6 +331,8 @@
 					hostSegments.shift();
 				}
 			}
+
+			console.log(cookies);
 		}
 
 		/* show the cookie bar */
