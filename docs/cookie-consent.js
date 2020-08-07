@@ -24,6 +24,11 @@
 			expects: number
 			default: 2592000 (30 days)
 
+		cookiesAllowedCookiePath:
+			setting: Path relative to the host name of the website for which the cookies allowed cookie should be stored.
+			expects: string
+			default: '/' (root of the host)
+
 		deleteAllCookiesOnRevokedConsent:
 			setting: If all cookies stored by this website should we deleted if consent was revoked or denied.
 					 This will delete all cookies saved for this domain regardless of the subdomain, if there was no path
@@ -68,6 +73,7 @@
 				cookieScriptTags: 					null,
 				cookiesAllowedCookie:				'cookiesallowed',
 				cookiesAllowedCookieMaxAge: 		2592000,
+				cookiesAllowedCookiePath: 			'/',
 				deleteAllCookiesOnRevokedConsent:	true,
 				elemNoticeBar: 						document.querySelector('.cookie-bar'),
 				elemsAccept: 						null,
@@ -97,6 +103,7 @@
 			this.processBoolParam('deleteAllCookiesOnRevokedConsent');
 			this.processBoolParam('reloadOnRevokeConsent');
 
+			this.processStringParam('cookiesAllowedCookiePath');
 			this.processStringParam('scriptTagClass');
 			this.processStringParam('cookiesAllowedCookie');
 			this.params.cookiesAllowedCookie = encodeURIComponent(this.params.cookiesAllowedCookie);
@@ -176,7 +183,7 @@
 
 		/* store the cookie consent decision in a cookie */
 		setCookieConsentCookie() {
-			document.cookie = this.params.cookiesAllowedCookie + '=true; max-age=' + this.params.cookiesAllowedCookieMaxAge + ';samesite=strict;path=/';
+			document.cookie = this.params.cookiesAllowedCookie + '=true; max-age=' + this.params.cookiesAllowedCookieMaxAge + ';samesite=strict;path=' + this.params.cookiesAllowedCookiePath;
 		}
 
 		/* revoke cookie consent and remove either just the cookie consent cookie or all cookies */

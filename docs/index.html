@@ -24,9 +24,10 @@
 
 		window.addEventListener('load', function() {
 			const params = {
-				cookieFunctions: [cookieConsentUpdated],
-				elemsDeny: document.querySelectorAll('.deny'),
-				reloadOnRevokeConsent: false
+				cookieFunctions:          [cookieConsentUpdated],
+				elemsDeny:                document.querySelectorAll('.deny'),
+				reloadOnRevokeConsent:    false,
+				cookiesAllowedCookiePath: '/cookie-consent.js/'
 			};
 
 			const cookieConsent = new CookieConsent(params);
