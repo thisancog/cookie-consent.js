@@ -47,6 +47,10 @@ List of script tags set to type="text/plain" to de/activate when consent changes
 
 Name of cookie to be saved if consent is given.
 
+**cookiesAllowedCookiePath** (string, *default:* `"/"`):
+
+Path relative to the host name of the website for which the cookies allowed cookie should be stored. The default value `"/"` signifies the root of the host, i.e. `http://example.com`.
+
 **cookiesAllowedCookieMaxAge** (number, *default:* `2592000`):
 
 The maximum time for the consent to be stored as a cookie, if it has been given (in seconds). The default 2592000 will keep the cookie stored for 30 days. 
