@@ -312,8 +312,6 @@
 			var cookies = document.cookie.split(';'),
 				path    = this.trimTrailingSlash(window.location.pathname);
 
-			console.log(cookies);
-
 			for (var i = 0; i < cookies.length; i++) {
 				var cookie       = cookies[i].trim(),
 					name         = cookie.split(';')[0].split('=')[0],
@@ -322,7 +320,6 @@
 					minLength    = hostSegments.length == 1 ? 1 : 2;
 
 				document.cookie = base;
-				if (name == 'cookiesallowed') console.log(base);
 
 				while (hostSegments.length >= minLength) {
 					var baseHosts    = base + '; domain=' + hostSegments.join('.') + '; path=',
@@ -331,9 +328,6 @@
 					while (pathSegments.length > 0) {
 						document.cookie = baseHosts + pathSegments.join('/') + '/';
 						document.cookie = baseHosts + pathSegments.join('/');
-
-						if (name == 'cookiesallowed') console.log(baseHosts + pathSegments.join('/') + '/');
-						if (name == 'cookiesallowed') console.log(baseHosts + pathSegments.join('/'));
 						pathSegments.pop();
 					}
 
@@ -341,8 +335,6 @@
 					hostSegments.shift();
 				}
 			}
-
-			console.log(document.cookie.split(';'));
 		}
 
 		/* show the cookie bar */

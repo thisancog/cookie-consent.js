@@ -24,6 +24,11 @@
 			expects: number
 			default: 2592000 (30 days)
 
+		cookiesAllowedCookiePath:
+			setting: Path relative to the host name of the website for which the cookies allowed cookie should be stored.
+			expects: string
+			default: '/' (root of the host)
+
 		deleteAllCookiesOnRevokedConsent:
 			setting: If all cookies stored by this website should we deleted if consent was revoked or denied.
 					 This will delete all cookies saved for this domain regardless of the subdomain, if there was no path
@@ -46,6 +51,11 @@
 			expects: NodeList or array of HTML elements
 			default: null (child element of elemNoticeBar matching '.deny')
 
+		reloadOnRevokeConsent:
+			setting: Whether the page should reload when consent, which was given before, has been revoked. Use this to stop scripts which would otherwise continue to run.
+			expects: Boolean
+			default: fals		
+
 		scriptTagClass:
 			setting: The class of script tags set to type="text/plain" to de/activate when consent changes.
 			expects: String
@@ -63,10 +73,12 @@
 				cookieScriptTags: 					null,
 				cookiesAllowedCookie:				'cookiesallowed',
 				cookiesAllowedCookieMaxAge: 		2592000,
+				cookiesAllowedCookiePath: 			'/',
 				deleteAllCookiesOnRevokedConsent:	true,
 				elemNoticeBar: 						document.querySelector('.cookie-bar'),
 				elemsAccept: 						null,
 				elemsDeny: 							null,
+				reloadOnRevokeConsent:				false,
 				scriptTagClass:						'cc-script',
 			};
 
@@ -89,8 +101,11 @@
 			this.params = Object.assign({}, this.defaults, params);
 
 			this.processBoolParam('deleteAllCookiesOnRevokedConsent');
+			this.processBoolParam('reloadOnRevokeConsent');
 
 			this.processStringParam('scriptTagClass');
+			this.processStringParam('cookiesAllowedCookiePath');
+			this.params.cookiesAllowedCookiePath = this.trimTrailingSlash(this.params.cookiesAllowedCookiePath);
 			this.processStringParam('cookiesAllowedCookie');
 			this.params.cookiesAllowedCookie = encodeURIComponent(this.params.cookiesAllowedCookie);
 
@@ -169,17 +184,22 @@
 
 		/* store the cookie consent decision in a cookie */
 		setCookieConsentCookie() {
-			document.cookie = this.params.cookiesAllowedCookie + '=true; max-age=' + this.params.cookiesAllowedCookieMaxAge + ';samesite=strict;path=/';
+			document.cookie = this.params.cookiesAllowedCookie + '=true; max-age=' + this.params.cookiesAllowedCookieMaxAge + '; samesite=strict; path=' + this.params.cookiesAllowedCookiePath;
 		}
 
 		/* revoke cookie consent and remove either just the cookie consent cookie or all cookies */
 		revokeCookieConsent() {
+			var consentWasGiven = this.consentGiven;
+			
 			this.consentGiven = false;
 			this.updateCookieScripts();
 			this.hideCookieBar();
 
 			if (this.params.deleteAllCookiesOnRevokedConsent)	this.removeAllCookies();
 			else 												this.removeCookieConsentCookie();
+
+			if (this.params.reloadOnRevokeConsent && consentWasGiven)
+				window.location.reload();
 		}
 
 		/* notify all registered functions of and update all registered script tags according to consent changes */
@@ -284,27 +304,30 @@
 
 		/* remove the cookie storing the consent decision */
 		removeCookieConsentCookie() {
-			document.cookie = this.params.cookiesAllowedCookie + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+			document.cookie = this.params.cookiesAllowedCookie + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=' + this.params.cookiesAllowedCookiePath;
 		}
 
 		/* remove all cookies for this host */
 		removeAllCookies() {
-			var cookies      = document.cookie.split(';');
+			var cookies = document.cookie.split(';'),
+				path    = this.trimTrailingSlash(window.location.pathname);
 
 			for (var i = 0; i < cookies.length; i++) {
-				var hostSegments = window.location.hostname.split('.');
-				while (hostSegments.length > 0) {
-					var cookie       = cookies[i].trim(),
-						name         = cookie.split(';')[0].split('=')[0],
-						base         = encodeURIComponent(name) + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT',
-						baseHosts    = base + '; domain=' + hostSegments.join('.') + '; path=',
-						pathSegments = window.location.pathname.split('/');
+				var cookie       = cookies[i].trim(),
+					name         = cookie.split(';')[0].split('=')[0],
+					base         = encodeURIComponent(name) + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT',
+					hostSegments = window.location.hostname.split('.'),
+					minLength    = hostSegments.length == 1 ? 1 : 2;
 
-					document.cookie = base;
+				document.cookie = base;
+
+				while (hostSegments.length >= minLength) {
+					var baseHosts    = base + '; domain=' + hostSegments.join('.') + '; path=',
+						pathSegments = path.split('/');
 
 					while (pathSegments.length > 0) {
-						document.cookie = baseHosts + pathSegments.join('/');
 						document.cookie = baseHosts + pathSegments.join('/') + '/';
+						document.cookie = baseHosts + pathSegments.join('/');
 						pathSegments.pop();
 					}
 
@@ -326,6 +349,11 @@
 			if (!this.params.elemNoticeBar) return;
 			this.params.elemNoticeBar.classList.remove('show');
 			this.params.elemNoticeBar.classList.add('hide');
+		}
+
+		trimTrailingSlash(url) {
+			if (!url) return;
+			return url.replace(/\/+$/g, '');
 		}
 	}
 
