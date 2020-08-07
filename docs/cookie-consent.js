@@ -334,7 +334,7 @@
 				}
 			}
 
-			console.log(cookies);
+			console.log(document.cookie.split(';'));
 		}
 
 		/* show the cookie bar */
