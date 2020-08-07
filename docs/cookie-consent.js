@@ -103,8 +103,9 @@
 			this.processBoolParam('deleteAllCookiesOnRevokedConsent');
 			this.processBoolParam('reloadOnRevokeConsent');
 
-			this.processStringParam('cookiesAllowedCookiePath');
 			this.processStringParam('scriptTagClass');
+			this.processStringParam('cookiesAllowedCookiePath');
+			this.params.cookiesAllowedCookiePath = this.trimTrailingSlash(this.params.cookiesAllowedCookiePath);
 			this.processStringParam('cookiesAllowedCookie');
 			this.params.cookiesAllowedCookie = encodeURIComponent(this.params.cookiesAllowedCookie);
 
@@ -309,7 +310,7 @@
 		/* remove all cookies for this host */
 		removeAllCookies() {
 			var cookies = document.cookie.split(';'),
-				path    = window.location.pathname.replace(/\/+$/g, '');
+				path    = this.trimTrailingSlash(window.location.pathname);
 
 			console.log(cookies);
 
@@ -356,6 +357,11 @@
 			if (!this.params.elemNoticeBar) return;
 			this.params.elemNoticeBar.classList.remove('show');
 			this.params.elemNoticeBar.classList.add('hide');
+		}
+
+		trimTrailingSlash(url) {
+			if (!url) return;
+			return url.replace(/\/+$/g, '');
 		}
 	}
 
