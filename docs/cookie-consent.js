@@ -296,7 +296,6 @@
 
 		/* remove the cookie storing the consent decision */
 		removeCookieConsentCookie() {
-			console.log('Remove consent cookie');
 			document.cookie = this.params.cookiesAllowedCookie + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
 		}
 
@@ -323,7 +322,7 @@
 						document.cookie = baseHosts + pathSegments.join('/') + '/';
 
 						console.log(baseHosts + pathSegments.join('/'));
-						console.log(baseHosts + pathSegments.join('/')) + '/';
+						console.log(baseHosts + pathSegments.join('/') + '/');
 						pathSegments.pop();
 					}
 
