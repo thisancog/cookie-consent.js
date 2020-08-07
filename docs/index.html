@@ -13,12 +13,10 @@
 	<script src="cookie-consent.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		function cookieConsentUpdated(consent) {
-			const messages = {
-				waiting: 'I will wait until consent is given.',
-				given: 'Thank you for agreeing with the 🍪 terms!'
-			};
+			const waiting = 'I will wait until consent is given.';
+			const given = 'Thank you for agreeing with the 🍪 terms!';
 
-			document.querySelector('main p').innerText = consent ? messages.given : messages.waiting;
+			document.querySelector('main p').innerText = consent ? given : waiting;
 			document.body.classList.toggle('cookies-allowed', consent);
 		}
 
