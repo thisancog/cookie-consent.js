@@ -1,5 +1,7 @@
 # cookie-consent.js
-A simple JavaScript class to handle cookie consent changes and notify cookie settings scripts.
+A simple JavaScript class to handle cookie consent changes and notify cookie settings scripts. It is lean and does not impose any DOM elements or styling, leaving these decisions to the designer and developer.
+
+[Find a working example here.](https://thisancog.github.io/cookie-consent.js/)
 
 ## Legal disclaimer
 The author of this tool does not guarantee for it or any of its derivations to work on all devices and browsers, for it to be free of malfunctions or compliant with laws or regulations, especially regarding privacy laws, in any legislation. By using this tool, you acknowledge this disclaimer and agree to review and verify this tool's or its derivation's suitability for whatever intent or purpose prior to usage. You also agree that you are alone a culpable in the event of any damages resulting from the usage of this tool or its derivation.
@@ -27,38 +29,7 @@ Typically, you'd like to set up a cookie notice bar, a button to signify consent
 
 The cookie bar element, if specified, will receive HTML classes "show" and "hide" based on any consent changes. You will need to supply your own CSS declarations to reflect this update in the layout.
 
-Example:
-
-    <html>
-	    <head>
-		    <script src="cookie-consent.js" type="text/javascript"></script>
-		    <script type="text/javascript">
-			    const parameters = { … };
-			    const cookieConsent = new CookieConsent(parameters);
-		    </script>
-		    
-		    <script src="this-will.be/blocked.js" type="text/plain" class="cc-script"></script>
-		    <script type="text/plain" class="cc-script">
-			    console.log('I will wait until consent is given.');
-			    /* … */
-		    </script>
-
-			<style>
-				.cookie-bar.hide { display: none; }
-			</style>
-		    
-		</head>
-		<body>
-			<!-- some content -->
-			
-			<section class="cookie-bar">
-				<p>Do you like some cookies?</p>
-				<button type="button" class="accept">Yes, I do</button>
-				<button type="button" class="deny">Nah</button>
-			</section>
-		</body>
-	</html>
-		 
+[Find a working example here.](https://thisancog.github.io/cookie-consent.js/)	 
 
 ### Parameters
 
