@@ -17,14 +17,37 @@ cookie-consent.js uses the opt-in principle by default: The user needs to active
 cookie-consent.js needs to be provided with JavaScript functions or `<script>` elements it should monitor. The behaviour differs for each:
 
  - Functions will be called with the parameter `consent`, a Boolean indicating if consent was given (`true` or `false`).
- - Script elements need will be monitored if their `type` attribute is set to `text/plain` and if they contain a class matching the string given by the `scriptTagClass` parameter (`"cc-script"`) by default.
+ - Script elements will be automatically monitored if their `type` attribute is set to `text/plain` and if they contain a class matching the string given by the `scriptTagClass` parameter (`"cc-script"`) by default.  They will be executed once consent is given.
 
 ## Usage
+
+### 1. Include the file and fire up the class
 
 Include the file `cookie-consent.js` in your project and instantiate its CookieConsent class as such:
 
     const parameters = { … };
     const cookieConsent = new CookieConsent(parameters);
+
+Find a full list of parameters below.
+
+### 2. Prepare `<script>` tags, if needed
+
+All `<script>` tags containing code to only run when consent is given, need to be prepared:
+
+ - Set the `type` parameter to `"text/plain"`. This makes sure they don't run after page load.
+ - Add the HTML class `"cc-script"` (can be changed to something else, see *scriptTagClass* parameter). 
+ 
+The tags should look like this:
+ 
+    <script src="/path/to/some/blocked/script.js" type="text/plain" class="cc-script"></script>
+
+Alternative to the HTML class approach, you can instantiate the class with a list of `<script>` tags with the help of the *cookieScriptTags* parameter.
+
+### 3. Register JavaScript functions, if needed
+
+You can also provide the class with callback functions that will be executed every time the consent changes. You can either register them when you instantiate the class (see *cookieFunctions* parameter) or add them later on (see *registerCookieFunction* method).
+
+### 4. Set up DOM elements and CSS styles
 
 Typically, you'd like to set up a cookie notice bar, a button to signify consent and another button to signify rejection. None of these are required and you might want to add additional rejection buttons, e.g. within a privacy declaration enabling the user to revoke consent and delete all cookies.
 
@@ -32,9 +55,9 @@ The cookie bar element, if specified, will receive HTML classes "show" and "hide
 
 [Find a working example here.](https://thisancog.github.io/cookie-consent.js/)	 
 
-### Parameters
+## Parameters
 
-The class can be initiated with an object detailing a few parameters.
+The class can be instantiated with an object detailing a few parameters.
 
     const parameters = {
         cookieFunctions:                   [],
@@ -94,9 +117,9 @@ Whether the page should reload when consent, which was given before, has been re
 
 The HTML class of script tags set to `type="text/plain"` to de/activate when consent changes.
 
-### Methods
+## Methods
 
-After the CookieConsent class has been initialised, a few methods can be used, primarily to add or remove functions and scripts from the watchlist:
+After the CookieConsent class has been instantiated, a few methods can be used, primarily to add or remove functions and scripts from the watchlist:
 
 **checkCookieConsent** (no parameters):
 
