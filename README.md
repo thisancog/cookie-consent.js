@@ -37,17 +37,17 @@ The cookie bar element, if specified, will receive HTML classes "show" and "hide
 The class can be initiated with an object detailing a few parameters.
 
     const parameters = {
-	    cookieFunctions:                   [],
-    	cookieScriptTags:                  null,
-    	cookiesAllowedCookie:              'cookiesallowed',
-    	cookiesAllowedCookieMaxAge:        2592000,
-    	cookiesAllowedCookiePath:          '/',
-    	deleteAllCookiesOnRevokedConsent:  true,
-    	elemNoticeBar:                     document.querySelector('.cookie-bar'),
-    	elemsAccept:                       null,
-    	elemsDeny:                         null,
-    	reloadOnRevokeConsent:             false,
-    	scriptTagClass:                    'cc-script',
+        cookieFunctions:                   [],
+        cookieScriptTags:                  null,
+        cookiesAllowedCookie:              'cookiesallowed',
+        cookiesAllowedCookieMaxAge:        2592000,
+        cookiesAllowedCookiePath:          '/',
+        deleteAllCookiesOnRevokedConsent:  true,
+        elemNoticeBar:                     document.querySelector('.cookie-bar'),
+        elemsAccept:                       null,
+        elemsDeny:                         null,
+        reloadOnRevokeConsent:             false,
+        scriptTagClass:                    'cc-script',
     };
 
 **cookieFunctions** (array of functions, *default:* `[]`):
