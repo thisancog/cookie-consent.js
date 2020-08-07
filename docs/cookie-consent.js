@@ -321,11 +321,11 @@
 					console.log(base);
 
 					while (pathSegments.length > 0) {
-						document.cookie = baseHosts + pathSegments.join('/');
 						document.cookie = baseHosts + pathSegments.join('/') + '/';
+						document.cookie = baseHosts + pathSegments.join('/');
 
-						console.log(baseHosts + pathSegments.join('/'));
 						console.log(baseHosts + pathSegments.join('/') + '/');
+						console.log(baseHosts + pathSegments.join('/'));
 						pathSegments.pop();
 					}
 
