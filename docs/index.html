@@ -12,17 +12,30 @@
 
 	<script src="cookie-consent.js" type="text/javascript"></script>
 	<script type="text/javascript">
+		function cookieConsentUpdated(consent) {
+			const messages = {
+				waiting: 'I will wait until consent is given.',
+				given: 'Thank you for agreeing with the 🍪 terms!'
+			};
+
+			document.querySelector('main p').innerText = consent ? messages.given : messages.waiting;
+			document.body.classList.toggle('cookies-allowed', consent);
+		}
+
 		window.addEventListener('load', function() {
-			const cookieConsent = new CookieConsent();
+			const params = {
+				cookieFunctions: [cookieConsentUpdated],
+				elemsDeny: document.querySelectorAll('.deny'),
+				reloadOnRevokeConsent: true
+			};
+
+			const cookieConsent = new CookieConsent(params);
 		});
 	</script>
 	    
 	<script type="text/plain" class="cc-script">
-		var p      = document.createElement('p'),
-			button = document.createElement('button');
-
-		p.innerText = 'Thank you for agreeing with the 🍪 terms!';
-		document.querySelector('main').appendChild(p);
+		document.cookie = 'chocolatechips=true; max-age=2592000';
+		document.cookie = 'butter=true; max-age=2592000';
 	</script>
 
 	<style>
@@ -31,6 +44,7 @@
 		.cookie-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #FFF; padding: 1em 2em; display: flex; justify-content: space-between; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
 		.cookie-bar.show { opacity: 1; pointer-events: all; }
 		nav { position: absolute; top: 1em; right: 1em; }
+		body:not(.cookies-allowed) .delete-cookies-later-on { display: none; }
 	</style>
 
 
@@ -42,6 +56,7 @@
 	<body>
 		<main>
 			<p>I will wait until consent is given.</p>
+			<button type="button" class="deny delete-cookies-later-on">Please delete all cookies and reload the page</button>
 		</main>
 		
 		<section class="cookie-bar">

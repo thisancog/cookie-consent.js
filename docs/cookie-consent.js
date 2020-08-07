@@ -46,6 +46,11 @@
 			expects: NodeList or array of HTML elements
 			default: null (child element of elemNoticeBar matching '.deny')
 
+		reloadOnRevokeConsent:
+			setting: Whether the page should reload when consent, which was given before, has been revoked. Use this to stop scripts which would otherwise continue to run.
+			expects: Boolean
+			default: fals		
+
 		scriptTagClass:
 			setting: The class of script tags set to type="text/plain" to de/activate when consent changes.
 			expects: String
@@ -67,6 +72,7 @@
 				elemNoticeBar: 						document.querySelector('.cookie-bar'),
 				elemsAccept: 						null,
 				elemsDeny: 							null,
+				reloadOnRevokeConsent:				false,
 				scriptTagClass:						'cc-script',
 			};
 
@@ -89,6 +95,7 @@
 			this.params = Object.assign({}, this.defaults, params);
 
 			this.processBoolParam('deleteAllCookiesOnRevokedConsent');
+			this.processBoolParam('reloadOnRevokeConsent');
 
 			this.processStringParam('scriptTagClass');
 			this.processStringParam('cookiesAllowedCookie');
@@ -174,12 +181,17 @@
 
 		/* revoke cookie consent and remove either just the cookie consent cookie or all cookies */
 		revokeCookieConsent() {
+			var consentWasGiven = this.consentGiven;
+			
 			this.consentGiven = false;
 			this.updateCookieScripts();
 			this.hideCookieBar();
 
 			if (this.params.deleteAllCookiesOnRevokedConsent)	this.removeAllCookies();
 			else 												this.removeCookieConsentCookie();
+
+			if (this.params.reloadOnRevokeConsent && consentWasGiven)
+				window.location.reload();
 		}
 
 		/* notify all registered functions of and update all registered script tags according to consent changes */
