@@ -65,33 +65,43 @@ Example:
 The class can be initiated with an object detailing a few parameters, including:
 
 **cookieFunctions** (array of functions, *default:* `[]`):
+
 Functions to be called when cookie consent changes. Called with parameter "consent" (Boolean): true if consent was given, false if it was revoked or denied.
 
 **cookieScriptTags** (NodeList or array of HTML Elements, *default:* `null`):
+
 List of script tags set to type="text/plain" to de/activate when consent changes. If it is null (as per default), it will be filled with scripts set to `type="text/plain"` with the class stated by parameter "scriptTagClass".
 
 **cookiesAllowedCookie** (string, *default:* `"cookiesallowed"`):
+
 Name of cookie to be saved if consent is given.
 
 **cookiesAllowedCookieMaxAge** (number, *default:* `2592000`):
+
 The maximum time for the consent to be stored as a cookie, if it has been given (in seconds). The default 2592000 will keep the cookie stored for 30 days. 
 
 **deleteAllCookiesOnRevokedConsent** (Boolean, *default:* `true`):
+
 If all cookies stored by this website should we deleted if consent was revoked or denied. This will delete all cookies saved for this domain regardless of the subdomain, but only if there was no path parameter given and if the `HttpOnly` flag was not set when they were saved.
 
 **elemNoticeBar** (HTML Element, *default:* first element matching the selector `".cookie-bar"`):
+
 The cookie consent notice bar or modal.
 
 **elemsAccept** (NodeList or array of HTML Elements, *default:* `null`):
+
 List of elements to give cookie consent, when clicked. If it is `null` (as per default), the first child element of *elemNoticeBar* matching the selector `".accept"` will be used.
 
 **elemsDeny** (NodeList or array of HTML Elements, *default:* `null`):
+
 List of elements to deny or revoke cookie consent, when clicked. If it is `null` (as per default), the first child element of *elemNoticeBar* matching the selector `".deny"` will be used.
 
 **reloadOnRevokeConsent** (Boolean, *default:* `true`):
+
 Whether the page should reload when consent, which was given before, has been revoked. Use this to stop scripts which would otherwise continue to run.
 
 **scriptTagClass** (string, *default:* `"cc-script"`):
+
 The HTML class of script tags set to `type="text/plain"` to de/activate when consent changes.
 
 ### Methods
@@ -99,16 +109,21 @@ The HTML class of script tags set to `type="text/plain"` to de/activate when con
 After the CookieConsent class has been initialised, a few methods can be used, primarily to add or remove functions and scripts from the watchlist:
 
 **checkCookieConsent** (no parameters):
+
 Force the reevaluation of the cookie consent, i.e. see if the cookie storing prior consent (see parameter *cookiesAllowedCookie*) is present.
 
 **registerCookieFunction** (*func* (required): function)
+
 Register a function *func* to be notified of any changes made to the cookie consent. On any change as well as right after the registration, it will be called with the parameter `consent`, a Boolean indicating if consent was given (`true` or `false`).
 
 **deregisterCookieFunction** (*func* (required): function)
+
 Deregister a function *func* to be notified of any changes made to the cookie consent.
 
 **registerCookieScriptTag** (*tag* (required): `<script>` element)
+
 Register a `<script>` element *tag* to be de-/activated when any changes are being made to the cookie consent. Immediately after registration, *tag* will be de-/activated based on the current choice.
 
 **deregisterCookieScriptTag** (*tag* (required): `<script>` element)
+
 Deregister a `<script>` element *tag* to be de-/activated when any changes are being made to the cookie consent.
