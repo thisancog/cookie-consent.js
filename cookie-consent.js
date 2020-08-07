@@ -3,11 +3,6 @@
 	/***************************************
 		Parameters: (object where keys are parameters and values are their settings)
 
-		blackList:
-			setting: List of domains which are blacklisted from executing code.
-			expects: array of valid RegEx patterns
-			default: []
-
 		cookieFunctions:
 			setting: Functions to be called when cookie consent changes.
 					 Called with parameter "consent" (Boolean): true if consent was given, false if it was revoked or denied.
@@ -64,7 +59,6 @@
 			params = params == null ? {} : params;
 
 			this.defaults = {
-				blackList: 							[],
 				cookieFunctions: 					[],
 				cookieScriptTags: 					null,
 				cookiesAllowedCookie:				'cookiesallowed',
@@ -81,8 +75,6 @@
 			this.consentGiven  = false;
 
 			this.processParameters(params);
-			this.filterCreateElement();
-			this.registerMutationObserver();
 			this.registerEvents();
 			this.checkCookieConsent();
 		}
@@ -196,11 +188,6 @@
 
 			this.notifyCookieFunctions(consent);
 			this.updateCookieScriptTags(consent);
-
-			console.log(consent, this.backupScripts);
-
-			if (consent)
-				this.unblockDynamicallyCreatedScriptTag();
 		}
 
 		/* notify all registered functions of consent changes */
@@ -267,123 +254,6 @@
 			this.params.cookieScriptTags.splice(this.params.cookieScriptTags.indexOf(tag), 1);
 		}
 
-
-
-		/**************************************************
-			Monitor dynamically inserted script tags
-		**************************************************/
-
-		/* use a Mutation Observer to detect dynamically inserted script tags */
-		registerMutationObserver() {
-			this.observer = new MutationObserver(this.mutationCallback.bind(this));
-			this.observer.observe(document.documentElement, {
-				childList: true,
-				subtree: true
-			})
-		}
-
-		/* manage any dynamically inserted script tags */
-		mutationCallback(mutations) {
-			for (var i = 0; i < mutations.length; i++) {
-				var nodes = mutations[i].addedNodes;
-
-				for (var j = 0; j < nodes.length; j++) {
-					var node = nodes[j];
-					if (node.nodeType !== 1 || node.tagName.toLowerCase() !== 'script') continue;
-
-					var src  = node.getAttribute('src') || '',
-						type = node.getAttribute('type');
-
-					var beforeScriptExecuteFF = function(e) {
-						if (node.getAttribute('type') == 'text/plain')
-							e.preventDefault();
-						node.removeEventListener('beforeScriptExecute', beforeScriptExecuteFF);
-					};
-
-					if (this.isOnBlackList(src, type, this)) {
-						this.backupScripts.push([node, type]);
-						node.type = 'text/plain';
-						node.addEventListener('beforescriptexecute', beforeScriptExecuteFF);
-						node.parentElement.removeChild(node);
-					}
-
-					console.log(this.backupScripts);
-				}
-			}
-		}
-
-		/* check if a source is blacklisted */
-		isOnBlackList(src, type, obj) {
-			obj = obj || this;
-			
-			return !obj.consentGiven && src && (!type || type !== 'text/plain') &&
-				  (!obj.params.blackList || obj.params.blackList.some(pattern => pattern.test(src)));
-		}
-
-		unblockDynamicallyCreatedScriptTag() {
-			this.backupScripts.forEach(function(script) {
-				console.log(script);
-			});
-
-			this.observer.disconnect();
-		}
-
-		/* overriding createElement function to filter script tags */
-		filterCreateElement() {
-			var obj                = this,
-				isOnBlackList      = this.isOnBlackList,
-				createElementBackup = document.createElement,
-				originalDescriptors = {
-					src:  Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, 'src'),
-					type: Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, 'type')
-				};
-			
-			document.createElement = (function(...args) {
-				var elem = createElementBackup.bind(document)(...args);
-
-				if (args[0].toLowerCase() !== 'script')
-					return elem;
-
-				try {				
-					Object.defineProperties(elem, {
-						'src': {
-							get() {
-								return originalDescriptors.src.get.call(this);
-							},
-							set(value) {
-								var type = originalDescriptors.type.get.call(this);
-								if (isOnBlackList(value, type, obj)) {
-									originalDescriptors.type.set.call(this, 'text/plain');
-								}
-
-								originalDescriptors.src.set.call(this, value);
-								return true;
-							}
-						},
-						'type': {
-							set(value) {
-								value = isOnBlackList(elem.src, value, obj) ? 'text/plain' : value;
-								originalDescriptors.type.set.call(this, value);
-								return true;
-							}
-						}
-					});
-
-					elem.setAttribute = function(name, value) {
-						if (name === 'type' || name === 'src')	elem[name] == value;
-						else 									HTMLScriptElement.prototype.setAttribute.call(elem, name, value);
-					}
-				} catch (error) {
-					// eslint-disable-next-line
-					 console.warn(
-						'Could not block the execution of the script ' +  elem.src + '.\n',
-						'Do you use a browser extension that changes the behaviour of the "document.createElement" function?'
-					)
-				}
-
-				return elem;
-			});
-		}
 
 
 		/**************************************************
