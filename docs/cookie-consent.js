@@ -307,18 +307,18 @@
 			console.log(cookies);
 
 			for (var i = 0; i < cookies.length; i++) {
-				var hostSegments = window.location.hostname.split('.'),
+				var cookie       = cookies[i].trim(),
+					name         = cookie.split(';')[0].split('=')[0],
+					base         = encodeURIComponent(name) + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT',
+					hostSegments = window.location.hostname.split('.'),
 					minLength    = hostSegments.length == 1 ? 1 : 2;
 
-				while (hostSegments.length >= minLength) {
-					var cookie       = cookies[i].trim(),
-						name         = cookie.split(';')[0].split('=')[0],
-						base         = encodeURIComponent(name) + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT',
-						baseHosts    = base + '; domain=' + hostSegments.join('.') + '; path=',
-						pathSegments = path.split('/');
+				document.cookie = base;
+				if (name == 'cookiesallowed') console.log(base);
 
-					document.cookie = base;
-					if (name == 'cookiesallowed') console.log(base);
+				while (hostSegments.length >= minLength) {
+					var baseHosts    = base + '; domain=' + hostSegments.join('.') + '; path=',
+						pathSegments = path.split('/');
 
 					while (pathSegments.length > 0) {
 						document.cookie = baseHosts + pathSegments.join('/') + '/';
