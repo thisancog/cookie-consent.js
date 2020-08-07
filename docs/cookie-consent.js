@@ -184,7 +184,7 @@
 
 		/* store the cookie consent decision in a cookie */
 		setCookieConsentCookie() {
-			document.cookie = this.params.cookiesAllowedCookie + '=true; max-age=' + this.params.cookiesAllowedCookieMaxAge + ';samesite=strict;path=' + this.params.cookiesAllowedCookiePath;
+			document.cookie = this.params.cookiesAllowedCookie + '=true; max-age=' + this.params.cookiesAllowedCookieMaxAge + '; samesite=strict; path=' + this.params.cookiesAllowedCookiePath;
 		}
 
 		/* revoke cookie consent and remove either just the cookie consent cookie or all cookies */
@@ -304,7 +304,7 @@
 
 		/* remove the cookie storing the consent decision */
 		removeCookieConsentCookie() {
-			document.cookie = this.params.cookiesAllowedCookie + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+			document.cookie = this.params.cookiesAllowedCookie + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=' + this.params.cookiesAllowedCookiePath;
 		}
 
 		/* remove all cookies for this host */
