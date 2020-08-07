@@ -21,6 +21,8 @@ cookie-consent.js needs to be provided with JavaScript functions or `<script>` e
 
 ## Usage
 
+[Find a working example here.](https://thisancog.github.io/cookie-consent.js/)
+
 ### 1. Include the file and fire up the class
 
 Include the file `cookie-consent.js` in your project and instantiate its CookieConsent class as such:
@@ -51,9 +53,7 @@ You can also provide the class with callback functions that will be executed eve
 
 Typically, you'd like to set up a cookie notice bar, a button to signify consent and another button to signify rejection. None of these are required and you might want to add additional rejection buttons, e.g. within a privacy declaration enabling the user to revoke consent and delete all cookies.
 
-The cookie bar element, if specified, will receive HTML classes "show" and "hide" based on any consent changes. You will need to supply your own CSS declarations to reflect this update in the layout.
-
-[Find a working example here.](https://thisancog.github.io/cookie-consent.js/)	 
+The cookie bar element, if specified, will receive HTML classes "`show`" and "`hide`" based on the consent status. You will need to supply your own CSS declarations to reflect this update in the layout.
 
 ## Parameters
 
@@ -95,7 +95,7 @@ The maximum time for the consent to be stored as a cookie, if it has been given 
 
 **deleteAllCookiesOnRevokedConsent** (Boolean, *default:* `true`):
 
-If all cookies stored by this website should we deleted if consent was revoked or denied. This will delete all cookies saved for this domain regardless of the subdomain, but only if there was no path parameter given and if the `HttpOnly` flag was not set when they were saved.
+If all cookies stored by this website should be deleted if consent was revoked or denied. This will delete all cookies saved for this domain regardless of the subdomain, but only if there was no path parameter given and if the `HttpOnly` flag was not set when they were saved.
 
 **elemNoticeBar** (HTML Element, *default:* first element matching the selector `".cookie-bar"`):
 
