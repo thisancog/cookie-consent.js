@@ -127,7 +127,7 @@
 		}
 
 		processNumberParam(param) {
-			this.params[param] = Math.round(typeof this.params[param] !== 'number' ? this.defaults[param] : this.params[param]);
+			this.params[param] = Math.round(isNaN(this.params[param]) ? this.defaults[param] : this.params[param]);
 		}
 
 		processNodeListParam(param, defaultList) {
